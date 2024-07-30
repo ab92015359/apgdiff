@@ -115,8 +115,7 @@ public class PgDiffArguments {
      *
      * @param ignoreFunctionWhitespace {@link #ignoreFunctionWhitespace}
      */
-    public void setIgnoreFunctionWhitespace(
-            final boolean ignoreFunctionWhitespace) {
+    public void setIgnoreFunctionWhitespace(final boolean ignoreFunctionWhitespace) {
         this.ignoreFunctionWhitespace = ignoreFunctionWhitespace;
     }
 
@@ -197,8 +196,7 @@ public class PgDiffArguments {
      *
      * @param outputIgnoredStatements {@link #outputIgnoredStatements}
      */
-    public void setOutputIgnoredStatements(
-            final boolean outputIgnoredStatements) {
+    public void setOutputIgnoredStatements(final boolean outputIgnoredStatements) {
         this.outputIgnoredStatements = outputIgnoredStatements;
     }
 
@@ -226,13 +224,17 @@ public class PgDiffArguments {
      * @param writer writer to be used for info output
      * @param args   array of arguments
      *
-     * @return true if arguments were parsed and execution can continue,
-     *         otherwise false
+     * @return true if arguments were parsed and execution can continue, otherwise
+     *         false
      */
     @SuppressWarnings("AssignmentToForLoopParameter")
     public boolean parse(final PrintWriter writer, final String[] args) {
         boolean success = true;
         final int argsLength;
+
+//        for (String arg : args) {
+//            writer.println(arg);
+//        }
 
         if (args.length >= 2) {
             argsLength = args.length - 2;
@@ -241,6 +243,7 @@ public class PgDiffArguments {
         }
 
         for (int i = 0; i < argsLength; i++) {
+//            writer.println("======" + args[i]);
             if ("--add-defaults".equals(args[i])) {
                 setAddDefaults(true);
             } else if ("--add-transaction".equals(args[i])) {
@@ -266,7 +269,13 @@ public class PgDiffArguments {
             } else if ("--version".equals(args[i])) {
                 setVersion(true);
             } else if ("--drop-if-exists".equals(args[i])) {
-               PgDiffUtils.setUseExists(true);
+                PgDiffUtils.setUseExists(true);
+            } else if (args[i].contains("--old")) {
+                String[] params = args[i].split("=");
+                setOldDumpFile(params[1]);
+            } else if (args[i].contains("--new")) {
+                String[] params = args[i].split("=");
+                setNewDumpFile(params[1]);
             } else {
                 writer.print(Resources.getString("ErrorUnknownOption"));
                 writer.print(": ");
@@ -286,9 +295,6 @@ public class PgDiffArguments {
         } else if (args.length < 2) {
             printUsage(writer);
             success = false;
-        } else if (success) {
-            setOldDumpFile(args[args.length - 2]);
-            setNewDumpFile(args[args.length - 1]);
         }
 
         return success;
@@ -300,8 +306,7 @@ public class PgDiffArguments {
      * @param writer writer to print the usage to
      */
     private void printUsage(final PrintWriter writer) {
-        writer.println(
-                Resources.getString("UsageHelp").replace("${tab}", "\t"));
+        writer.println(Resources.getString("UsageHelp").replace("${tab}", "\t"));
     }
 
     /**
