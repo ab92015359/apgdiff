@@ -115,6 +115,9 @@ public class AlterRelationParser {
             } else if (table != null && parser.expectOptional("DISABLE")) {
                 parseDisable(
                         parser, outputIgnoredStatements, relName, database);
+            } else if (table != null && parser.expectOptional("REPLICA")) {
+                parseReplica(
+                        parser, outputIgnoredStatements, relName, database);
             } else {
                 parser.throwUnsupportedCommand();
             }
@@ -124,6 +127,26 @@ public class AlterRelationParser {
             } else {
                 parser.expect(",");
             }
+        }
+    }
+    
+    /**
+     * Parses ENABLE statements.
+     *
+     * @param parser                  parser
+     * @param outputIgnoredStatements whether ignored statements should be
+     *                                output in the diff
+     * @param tableName               table name as it was specified in the
+     *                                statement
+     * @param database                database information
+     *
+     */
+    private static void parseReplica(final Parser parser,
+            final boolean outputIgnoredStatements, final String tableName,
+            final PgDatabase database) {
+        if (parser.expectOptional("IDENTITY") &&
+                parser.expectOptional("FULL")) {
+            database.addIgnoredStatement("ALTER TABLE ONLY " + tableName + " REPLICA IDENTITY FULL;");
         }
     }
 

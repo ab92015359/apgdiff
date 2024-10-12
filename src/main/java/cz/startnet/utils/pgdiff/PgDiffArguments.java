@@ -241,6 +241,8 @@ public class PgDiffArguments {
         } else {
             argsLength = args.length;
         }
+        
+//        argsLength = args.length;
 
         for (int i = 0; i < argsLength; i++) {
 //            writer.println("======" + args[i]);
